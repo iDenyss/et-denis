@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Start Content -->
+<div class="card mt-3">
+    <div class="card-body text-center">
+        <h1 class="heading">Anime populares del mes</h1>
+        <p>¡Sumérgete en el vibrante mundo del anime con nuestra selección de los 100 mejores títulos del mes! Desde emocionantes aventuras hasta conmovedoras historias, esta lista presenta lo mejor del anime que no querrás perderte.</p>
+    </div>
+</div>
+
+
+<div class="container mt-7">
+    <div class="row mt-4" id="animeList">
+        <!-- Tarjetas de anime se agregarán aquí -->
+    </div>
+</div>
+<!-- Static Scripts -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.scrollex.min.js' %}"></script>
+<script src="{% static 'js/jquery.scrolly.min.js' %}"></script>
+<script src="{% static 'js/browser.min.js' %}"></script>
+<script src="{% static 'js/breakpoints.min.js' %}"></script>
+<script src="{% static 'js/util.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+        const settings = {
+            async: true,
+            crossDomain: true,
+            url: 'https://myanimelist.p.rapidapi.com/anime/top/%7Bcategory%7D',
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'd36fc40be1msh3d6fe7e9e2ee948p1d5937jsne364a76cd105',
+                'X-RapidAPI-Host': 'myanimelist.p.rapidapi.com'
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            $.each(response, function(i, item) {
+                $("#animeList").append(`
+                    <div class="col-md-4 mb-4">
+                        <div class="card d-flex flex-column justify-content-between">
+                            <div class="card-content">
+                                <div class="card-image">
+                                    <img src="${item.picture_url}" alt="${item.title}">
+                                </div>
+                                <div class="card-text">
+                                    <br/>
+                                    <p>${item.title}</p>
+                                    <p>Rank: ${item.rank}</p>
+                                </div>
+                            </div>
+                            <a href="${item.myanimelist_url}" class="btn btn-info btn-block">Más detalles</a>
+                        </div>
+                    </div>
+                `);
+            });
+        });
+    });
+</script>
+
+<!-- Additional Scripts -->
+<script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
+<script src="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/templatemo.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Estilos -->
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/templatemo.css' %}">
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<link rel="stylesheet" href="{% static 'css/formulario.css' %}">
+
+<!-- Start Content Page -->
+<div class="container-fluid bg-light py-5">
+    <div class="col-md-6 m-auto text-center">
+        <h1 class="h1">Formulario de Contacto</h1>
+        <p>
+            Escribenos y en breve nos pondremos en contacto contigo.
+        </p>
+    </div>
+</div>
+
+<!-- Start Contact Form -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 m-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form id="formularioValidar">
+                        <div class="form-group">
+                            <label for="itNombre">Nombre:</label>
+                            <input type="text" id="itNombre" class="form-control" placeholder="Ingresa tu nombre" required>
+                            <div id="mensaje1" class="text-danger mt-2" style="display: none;">Dame tu nombre</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itEmail">Email:</label>
+                            <input type="email" id="itEmail" class="form-control" placeholder="Ingresa tu email" required>
+                            <div id="mensaje2" class="text-danger mt-2" style="display: none;">Dame tu Email</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itCelular">Celular:</label>
+                            <input type="tel" id="itCelular" class="form-control" placeholder="Ingresa tu número de celular" required>
+                            <div id="mensaje3" class="text-danger mt-2" style="display: none;">Dame tu Celular</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itPais">País:</label>
+                            <input type="text" id="itPais" class="form-control" placeholder="Ingresa tu país" required>
+                            <div id="mensaje4" class="text-danger mt-2" style="display: none;">Dame tu País</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itCiudad">Ciudad:</label>
+                            <input type="text" id="itCiudad" class="form-control" placeholder="Ingresa tu ciudad" required>
+                            <div id="mensaje5" class="text-danger mt-2" style="display: none;">Dame tu Ciudad</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="itTexto">Texto:</label>
+                            <textarea id="itTexto" class="form-control" rows="5" placeholder="Escribe tu mensaje" required></textarea>
+                            <div id="mensaje6" class="text-danger mt-2" style="display: none;">Escribe tu texto</div>
+                        </div>
+                        <button type="submit" id="bEnviar" class="btn btn-primary btn-block">Enviar los datos</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Contact Form -->
+
+<!-- Custom Script for Form Validation -->
+<script>
+    $(document).ready(function() {
+        var expr = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+
+        $("#bEnviar").click(function(event) {
+            event.preventDefault();
+            var nombre = $("#itNombre").val();
+            var email = $("#itEmail").val();
+            var celular = $("#itCelular").val();
+            var pais = $("#itPais").val();
+            var ciudad = $("#itCiudad").val();
+            var texto = $("#itTexto").val();
+
+            var isValid = true;
+
+            if (nombre == "") {
+                $("#mensaje1").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje1").fadeOut();
+            }
+
+            if (email == "" || !expr.test(email)) {
+                $("#mensaje2").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje2").fadeOut();
+            }
+
+            if (celular == "") {
+                $("#mensaje3").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje3").fadeOut();
+            }
+
+            if (pais == "") {
+                $("#mensaje4").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje4").fadeOut();
+            }
+
+            if (ciudad == "") {
+                $("#mensaje5").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje5").fadeOut();
+            }
+
+            if (texto == "") {
+                $("#mensaje6").fadeIn();
+                isValid = false;
+            } else {
+                $("#mensaje6").fadeOut();
+            }
+
+            if (isValid) {
+                alert("Formulario enviado correctamente!");
+                $("#formularioValidar")[0].reset(); // Resetear el formulario después del envío
+            }
+        });
+    });
+</script>
+<!-- End Script -->
+
+{% endblock %}

@@ -1,0 +1,45 @@
+.Footer{
+    background: black;
+    height: 70px;
+    border-top: 2px solid rgba(0, 0, 0, 0.24);  
+    /*  poner footer abajo */
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+    height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.card-content {
+    padding: 20px;
+}
+.card-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+}
+.card-text p {
+    margin-bottom: 0;
+}
+

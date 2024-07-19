@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body{
+        margin: 0 auto;
+        font-family: 'Lato', sans-serif;
+        color: #333;
+    }
+
+    .icon-cart{
+        width: 40px;
+        height: 40px;
+        stroke: #000;
+    }
+    
+    .icon-cart:hover{
+        cursor: pointer;
+    }
+    
+    img{
+        max-width: 100%;
+    }
+    
+    /* Header */
+    header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 20px 40px 20px; /* Ajuste el padding del header */
+    }
+
+    header h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .container-icon{
+        position: relative;
+        margin-right: 20px; /* Agregar margen al contenedor del icono */
+    }
+    
+    .count-products{
+        position: absolute;
+        top: 55%;
+        right: 0;
+    
+        background-color: #000;
+        color: #fff;
+        width: 25px;
+        height: 25px;
+    
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    }
+    
+    #contador-productos{
+        font-size: 12px;
+    }
+    
+    .container-cart-products{
+        position: absolute;
+        top: 50px;
+        right: 0;
+    
+        background-color: #fff;
+        width: 400px;
+        z-index: 1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
+        border-radius: 10px;
+        
+    }
+    
+    .cart-product{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px;
+    
+        border-bottom: 1px solid rgba(0, 0, 0, 0.20);
+    
+    }
+    
+    .info-cart-product{
+        display: flex;
+        justify-content: space-between;
+        flex: 0.8;
+    }
+    
+    .titulo-producto-carrito{
+        font-size: 20px;
+    }
+    
+    .precio-producto-carrito{
+        font-weight: 700;
+        font-size: 20px;
+        margin-left: 10px;
+    }
+    
+    .cantidad-producto-carrito{
+        font-weight: 400;
+        font-size: 20px;
+    }
+    
+    .icon-close{
+        width: 25px;
+        height: 25px;
+    }
+    
+    .icon-close:hover{
+        stroke: red;
+        cursor: pointer;
+    }
+    
+    .cart-total{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+        gap: 20px;
+    }
+    
+    .cart-total h3{
+        font-size: 20px;
+        font-weight: 700;
+    }
+    
+    .total-pagar{
+        font-size: 20px;
+        font-weight: 900;
+    }
+    
+    .hidden-cart{
+        display: none;
+    }
+    
+    /* Main */
+    .main-container {
+        padding: 0 20px;
+    }
+    
+    .container-items{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    
+    .item{
+        border-radius: 10px;
+    }
+    
+    .item:hover{
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
+    }
+    
+    .item img{
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 10px 10px 0 0;
+        transition: all .5s;
+    }
+    
+    .item figure{
+        overflow: hidden;
+    }
+    
+    .item:hover img{
+        transform: scale(1.2);
+    }
+    
+    .info-product{
+        padding: 15px 30px;
+        line-height: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .price{
+        font-size: 18px;
+        font-weight: 900;
+    }
+    
+    .info-product button{
+        border: none;
+        background: none;
+        background-color: #000;
+        color: #fff;
+        padding: 15px 10px;
+        cursor: pointer;
+    }
+    
+    .cart-empty{
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .hidden{
+        display: none;
+    }
+
+    header h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+
+<header>
+    <h1 class="text-align: center">Tienda</h1>
+
+    <div class="container-icon">
+        <div class="container-cart-icon">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="icon-cart"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                />
+            </svg>
+            <div class="count-products">
+                <span id="contador-productos">0</span>
+            </div>
+        </div>
+
+        <div class="container-cart-products hidden-cart">
+            <div class="row-product hidden">
+                <div class="cart-product">
+                    <div class="info-cart-product">
+                        <span class="cantidad-producto-carrito">1</span>
+                        <p class="titulo-producto-carrito">Figura Broly Blood</p>
+                        <span class="precio-producto-carrito">$29990</span>
+                    </div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="icon-close"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="cart-total hidden">
+                <h3>Total:</h3>
+                <span class="total-pagar">$200000</span>
+            </div>
+            <p class="cart-empty">El carrito está vacío</p>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="container-items">
+        <div class="item">
+            <figure>
+                <img
+                    src="https://animestore.cl/cdn/shop/files/1_c644acbd-4d6d-470e-8862-6a164689d34d.png?v=1716431509&width=713"
+                    alt="producto"
+                />
+            </figure>
+            <div class="info-product">
+                <h2>Figura Broly Blood</h2>
+                <p class="price">$29990</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img
+                    src="https://animestore.cl/cdn/shop/files/6_944df2dc-6ad2-49fb-8b5b-86db531e42b8.png?v=1718736449&width=713"
+                    alt="producto"
+                />
+            </figure>
+            <div class="info-product">
+                <h2>Figura Gogeta</h2>
+                <p class="price">$24990</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img
+                    src="https://animestore.cl/cdn/shop/files/3_c3ac9472-32a5-4d12-87ac-e2ede495036e.png?v=1707508817&width=713"
+                    alt="producto"
+                />
+            </figure>
+            <div class="info-product">
+                <h2>Figura Killua Zoldyck</h2>
+                <p class="price">$32990</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img
+                    src="https://animestore.cl/cdn/shop/files/3_4b3c17a8-4cf4-42a9-8f5f-b0a25c44ce3f.jpg?v=1707749820&width=713"
+                    alt="producto"
+                />
+            </figure>
+            <div class="info-product">
+                <h2>Gundam Seed Rubik´s Cube 2003</h2>
+                <p class="price">$22990</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img
+                    src="https://animestore.cl/cdn/shop/files/2023-09-24_10.34.33.jpg?v=1707788747&width=600"
+                    alt="producto"
+                />
+            </figure>
+            <div class="info-product">
+                <h2>CD Estudio Ghibli Songs</h2>
+                <p class="price">$21990</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src={% static "js/carrito.js" %}></script>
+
+{% endblock %}
