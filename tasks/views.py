@@ -4,9 +4,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .forms import Taskform
+from .forms import ProductoForm
 from .models import Task
+from .models import Producto
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import render
 
 from django.http import HttpResponse
 
@@ -15,6 +19,9 @@ from django.http import HttpResponse
 def home(request):
     return render(request, 'home.html')
 
+def compra_realizada(request):
+    return render(request, 'compra_realizada.html')
+
 def anime(request):
     return render(request, 'anime.html')
 
@@ -22,7 +29,20 @@ def formulario(request):
     return render(request, 'formulario.html')
 
 def carrito(request):
-    return render(request, 'carrito.html')
+    query = request.GET.get("search")
+    productos = Producto.objects.all()
+
+    # Filtrado si hay búsqueda
+    if query:
+        productos = productos.filter(
+            Q(nombre__icontains=query) | Q(descripcion__icontains=query)
+        )
+
+    # Vista diferente si es admin o usuario
+    if request.user.is_authenticated:
+        return render(request, 'carrito_admin.html', {"productos": productos, "query": query})
+    else:
+        return render(request, 'carrito.html', {"productos": productos, "query": query})
 
 def signup(request):
 
@@ -42,12 +62,12 @@ def signup(request):
                 return redirect('tasks')
             except IntegrityError:
                 return render(request, 'signup.html', {
-                     'form': UserCreationForm,
-                     "error": 'usuario ya existe'
+                'form': UserCreationForm,
+                "error": 'usuario ya existe'
                 })
         return render(request, 'signup.html', {
-                     'form': UserCreationForm,
-                     "error": 'contrasenas no hacen match'
+                'form': UserCreationForm,
+                "error": 'contrasenas no hacen match'
                 })
     
 @login_required
@@ -82,6 +102,29 @@ def create_task(request):
         })
 
 @login_required
+def create_producto(request):
+    if request.method == 'GET':
+        return render(request, 'create_producto.html', {
+            'form': ProductoForm()
+        })
+    else:
+        try:
+            form = ProductoForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('carrito')  # Cambia por la URL que corresponda
+            else:
+                return render(request, 'create_producto.html', {
+                    'form': form,
+                    'error': 'Por favor coloca datos válidos'
+                })
+        except ValueError:
+            return render(request, 'create_producto.html', {
+                'form': ProductoForm(),
+                'error': 'Ocurrió un error al guardar el producto'
+            })
+
+@login_required
 def task_detail(request, task_id):
     if request.method == 'GET':
         task = get_object_or_404(Task, pk= task_id, user=request.user)
@@ -111,6 +154,40 @@ def delete_task(request, task_id):
     if request.method == 'POST':
         task.delete()
         return redirect('tasks')
+    
+
+@login_required
+def update_producto(request, codigo):
+    producto = get_object_or_404(Producto, codigo=codigo)
+    if request.method == 'GET':
+        form = ProductoForm(instance=producto)
+        return render(request, 'update_producto.html', {'form': form, 'producto': producto})
+    else:
+        try:
+            form = ProductoForm(request.POST, instance=producto)
+            if form.is_valid():
+                form.save()
+                return redirect('carrito_admin')  # Cambia por la URL que corresponda
+            else:
+                return render(request, 'update_producto.html', {
+                    'form': form,
+                    'producto': producto,
+                    'error': 'Por favor coloca datos válidos'
+                })
+        except ValueError:
+            return render(request, 'update_producto.html', {
+                'form': ProductoForm(instance=producto),
+                'producto': producto,
+                'error': 'Ocurrió un error al actualizar el producto'
+            })
+
+@login_required
+def delete_producto(request, codigo):
+    producto = get_object_or_404(Producto, codigo=codigo)
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('carrito_admin')  # Cambia por la URL que corresponda
+    return render(request, 'delete_producto_confirm.html', {'producto': producto})
 
 @login_required
 def signout(request):

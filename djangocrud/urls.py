@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from tasks import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +26,7 @@ urlpatterns = [
     path('anime/', views.anime, name='anime'),
     path('formulario/', views.formulario, name='formulario'),
     path('carrito/', views.carrito, name='carrito'),
+    path('carrito_admin/', views.carrito, name='carrito_admin'),
     path('signup/', views.signup, name='signup'),
     path('tasks/', views.tasks, name='tasks'),
     path('tasks_completed/', views.tasks_completed, name='tasks_completed'),
@@ -32,5 +35,11 @@ urlpatterns = [
     path('tasks/<int:task_id>/complete', views.complete_task, name='complete_task'),
     path('tasks/<int:task_id>/delete', views.delete_task, name='delete_task'),
     path('logout/', views.signout, name='logout'),
-    path('signin/', views.signin, name='signin')
+    path('signin/', views.signin, name='signin'),
+    path('carrito/create/', views.create_producto, name='create_producto'),
+    path('productos/<int:codigo>/actualizar/', views.update_producto, name='update_producto'),
+    path('productos/<int:codigo>/eliminar/', views.delete_producto, name='delete_producto'),
+    path('carrito/compra_realizada', views.compra_realizada, name='compra_realizada'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
